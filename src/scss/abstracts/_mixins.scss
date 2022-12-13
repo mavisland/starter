@@ -1,0 +1,89 @@
+// Mixins
+
+// Media Queries
+@mixin breakpoint($type, $breakpoint, $orientation: null) {
+  @if $type == max {
+    @if $orientation != null {
+      @media (max-width: ($breakpoint - .02)) and (orientation: $orientation) {
+        @content;
+      }
+    } @else {
+      @media (max-width: ($breakpoint - .02)) {
+        @content;
+      }
+    }
+  } @else {
+    @if $orientation != null {
+      @media (min-width: $breakpoint) and (orientation: $orientation) {
+        @content;
+      }
+    } @else {
+      @media (min-width: $breakpoint) {
+        @content;
+      }
+    }
+  }
+}
+
+// Media Breakpoint Minimum
+@mixin from($breakpoint) {
+  @include breakpoint(min, $breakpoint) {
+    @content;
+  }
+}
+
+// Media Breakpoint Maximum
+@mixin until($breakpoint) {
+  @include breakpoint(max, $breakpoint) {
+    @content;
+  }
+}
+
+// Media Breakpoint Only
+@mixin only($max, $min) {
+  @media (max-width: ($max - .02)) and (min-width: $min) {
+    @content;
+  }
+}
+
+// Portrait Mode
+@mixin portrait($breakpoint) {
+  @include breakpoint(min, $breakpoint, portrait) {
+    @content;
+  }
+}
+
+// Portrait Mode (Max)
+@mixin portrait-max($breakpoint) {
+  @include breakpoint(max, $breakpoint, portrait) {
+    @content;
+  }
+}
+
+// Landscape Mode
+@mixin landscape($breakpoint) {
+  @include breakpoint(min, $breakpoint, landscape) {
+    @content;
+  }
+}
+
+// Landscape Mode (Max)
+@mixin landscape-max($breakpoint) {
+  @include breakpoint(max, $breakpoint, landscape) {
+    @content;
+  }
+}
+
+// Word Wrapping Mixin
+@mixin word-wrap($lines-to-show: 2, $font-size: 14px, $line-height: 1.35) {
+  position: relative;
+  display: flex;
+  height: calc(#{$font-size} * #{$line-height} * #{$lines-to-show});
+  padding: 0 !important;
+  overflow: hidden;
+  font-size: #{$font-size};
+  line-height: #{$line-height};
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines-to-show;
+}

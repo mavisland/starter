@@ -1,0 +1,8 @@
+**/*.js
+**/*.min.css
+**/*.html
+node_modules/**/*.css
+node_modules/**/*.js
+public/**/*.css
+public/**/*.js
+public/**/*.html

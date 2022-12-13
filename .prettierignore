@@ -1,0 +1,12 @@
+# Ignoring Folders
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+build
+vendor
+
+# Ignoring Files
+**/*.lock
+**/*.min.css
+**/*.min.js

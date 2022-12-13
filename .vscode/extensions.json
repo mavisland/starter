@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint", // Eslint
+    "editorconfig.editorconfig", // Editor Config
+    "esbenp.prettier-vscode", // Prettier
+    "stylelint.vscode-stylelint", // Stylelint
+    "1000ch.svgo", // svgo
+    "mblode.twig-language", // Twig Language
+    "bradlc.vscode-tailwindcss" // Tailwind CSS IntelliSense
+  ]
+}
