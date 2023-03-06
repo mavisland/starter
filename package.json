@@ -58,7 +58,7 @@
     "postcss": "^8.4.21",
     "sass": "^1.58.3",
     "stylelint": "^14.16.1",
-    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-twbs-bootstrap": "^7.0.0"
   }
 }
