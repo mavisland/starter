@@ -32,7 +32,7 @@
     "url": "https://github.com/mavisland/starter/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.0",
+    "@babel/core": "^7.21.4",
     "@babel/preset-env": "^7.20.2",
     "autoprefixer": "^10.4.13",
     "browser-sync": "^2.28.1",
