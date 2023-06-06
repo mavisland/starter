@@ -7,7 +7,7 @@
   "bracketSpacing": true,
   "overrides": [
     {
-      "files": ["*.html", "*.twig"],
+      "files": ["**/*.html", "**/*.twig"],
       "options": {
         "tabWidth": 4,
         "useTabs": true
