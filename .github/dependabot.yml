@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       time: "12:00"
       timezone: "Europe/Istanbul"
     open-pull-requests-limit: 10
@@ -14,3 +14,6 @@ updates:
     ignore:
       - dependency-name: "del"
       - dependency-name: "gulp-imagemin"
+      - dependency-name: "stylelint"
+      - dependency-name: "stylelint-config-prettier"
+      - dependency-name: "stylelint-config-twbs-bootstrap"
