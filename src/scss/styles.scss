@@ -2,7 +2,12 @@
 
 // Abstracts
 @import "../third-party/bootstrap/scss/functions";
+@import "../third-party/bootstrap/scss/variables";
+@import "../third-party/bootstrap/scss/maps";
 @import "../third-party/bootstrap/scss/mixins";
+@import "../third-party/bootstrap/scss/utilities";
+
+// Project Variables and Mixins
 @import "abstracts/mixins";
 @import "abstracts/variables";
 

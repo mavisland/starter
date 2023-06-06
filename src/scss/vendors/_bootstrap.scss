@@ -1,15 +1,17 @@
-/*!
- * Bootstrap v4.6.2 (https://getbootstrap.com/)
- * Copyright 2011-2022 The Bootstrap Authors
- * Copyright 2011-2022 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- */
+// scss-docs-start import-stack
+// Configuration
+@import "../../third-party/bootstrap/scss/functions";
+@import "../../third-party/bootstrap/scss/variables";
+@import "../../third-party/bootstrap/scss/maps";
+@import "../../third-party/bootstrap/scss/mixins";
+@import "../../third-party/bootstrap/scss/utilities";
 
+// Layout & components
 @import "../../third-party/bootstrap/scss/root";
 @import "../../third-party/bootstrap/scss/reboot";
 @import "../../third-party/bootstrap/scss/type";
 @import "../../third-party/bootstrap/scss/images";
-@import "../../third-party/bootstrap/scss/code";
+@import "../../third-party/bootstrap/scss/containers";
 @import "../../third-party/bootstrap/scss/grid";
 @import "../../third-party/bootstrap/scss/tables";
 @import "../../third-party/bootstrap/scss/forms";
@@ -17,18 +19,15 @@
 @import "../../third-party/bootstrap/scss/transitions";
 @import "../../third-party/bootstrap/scss/dropdown";
 @import "../../third-party/bootstrap/scss/button-group";
-@import "../../third-party/bootstrap/scss/input-group";
-@import "../../third-party/bootstrap/scss/custom-forms";
 @import "../../third-party/bootstrap/scss/nav";
 @import "../../third-party/bootstrap/scss/navbar";
 @import "../../third-party/bootstrap/scss/card";
+@import "../../third-party/bootstrap/scss/accordion";
 @import "../../third-party/bootstrap/scss/breadcrumb";
 @import "../../third-party/bootstrap/scss/pagination";
 @import "../../third-party/bootstrap/scss/badge";
-@import "../../third-party/bootstrap/scss/jumbotron";
 @import "../../third-party/bootstrap/scss/alert";
 @import "../../third-party/bootstrap/scss/progress";
-@import "../../third-party/bootstrap/scss/media";
 @import "../../third-party/bootstrap/scss/list-group";
 @import "../../third-party/bootstrap/scss/close";
 @import "../../third-party/bootstrap/scss/toasts";
@@ -37,5 +36,12 @@
 @import "../../third-party/bootstrap/scss/popover";
 @import "../../third-party/bootstrap/scss/carousel";
 @import "../../third-party/bootstrap/scss/spinners";
-@import "../../third-party/bootstrap/scss/utilities";
-@import "../../third-party/bootstrap/scss/print";
+@import "../../third-party/bootstrap/scss/offcanvas";
+@import "../../third-party/bootstrap/scss/placeholders";
+
+// Helpers
+@import "../../third-party/bootstrap/scss/helpers";
+
+// Utilities
+@import "../../third-party/bootstrap/scss/utilities/api";
+// scss-docs-end import-stack
