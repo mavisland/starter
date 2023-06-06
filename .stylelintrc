@@ -2,6 +2,30 @@
   "extends": ["stylelint-config-prettier", "stylelint-config-twbs-bootstrap"],
   "rules": {
     "declaration-no-important": null,
-    "scss/selector-no-union-class-name": true
+    "font-family-no-missing-generic-family-keyword": [
+      true,
+      {
+        "ignoreFontFamilies": ["FontAwesome"]
+      }
+    ],
+    "scss/at-function-named-arguments": [
+      "never",
+      {
+        "ignoreFunctions": ["color.adjust"]
+      }
+    ],
+    "scss/dollar-variable-default": [
+      true,
+      {
+        "ignore": "local"
+      }
+    ],
+    "scss/selector-no-union-class-name": true,
+    "selector-no-qualifying-type": [
+      true,
+      {
+        "ignore": ["attribute", "class"]
+      }
+    ]
   }
 }
