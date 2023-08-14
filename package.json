@@ -56,7 +56,7 @@
     "gulp-zip": "^5.1.0",
     "gulp.spritesmith": "^6.13.0",
     "postcss": "^8.4.24",
-    "sass": "^1.63.5",
+    "sass": "^1.65.1",
     "stylelint": "14.5.1",
     "stylelint-config-prettier": "9.0.5",
     "stylelint-config-twbs-bootstrap": "3.0.0"
