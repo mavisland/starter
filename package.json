@@ -53,7 +53,7 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-terser": "^2.1.0",
     "gulp-twig": "^1.2.0",
-    "gulp-zip": "^5.1.0",
+    "gulp-zip": "^6.0.0",
     "gulp.spritesmith": "^6.13.0",
     "postcss": "^8.4.29",
     "sass": "^1.66.1",
