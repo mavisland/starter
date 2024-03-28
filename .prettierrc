@@ -7,10 +7,21 @@
   "bracketSpacing": true,
   "overrides": [
     {
-      "files": ["**/*.html", "**/*.twig"],
+      "files": ".prettierrc",
+      "options": { "parser": "json" }
+    },
+    {
+      "files": ["*.html", "*.twig"],
       "options": {
         "tabWidth": 4,
         "useTabs": true
+      }
+    },
+    {
+      "files": ["*.css", "*.scss"],
+      "options": {
+        "tabWidth": 1,
+        "useTabs": false
       }
     }
   ]
