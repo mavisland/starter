@@ -4,7 +4,6 @@
 **/.hg
 **/node_modules
 build
-vendor
 
 # Ignoring Files
 **/*.lock
