@@ -1,31 +1,50 @@
 {
-  "extends": ["stylelint-config-twbs-bootstrap"],
-  "overrides": [
-    {
-      "rules": {
-        "declaration-property-value-disallowed-list": {
-          "border": "none",
-          "outline": "none"
-        },
-        "function-disallowed-list": ["calc", "lighten", "darken"],
-        "property-disallowed-list": [
-          "border-radius",
-          "border-top-left-radius",
-          "border-top-right-radius",
-          "border-bottom-right-radius",
-          "border-bottom-left-radius",
-          "transition"
-        ],
-        "scss/dollar-variable-default": [
-          true,
-          {
-            "ignore": "local"
-          }
-        ],
-        "scss/selector-no-union-class-name": true
+  "extends": ["stylelint-config-prettier", "stylelint-config-twbs-bootstrap"],
+  "rules": {
+    "at-rule-no-vendor-prefix": true,
+    "color-hex-case": "lower",
+    "color-hex-length": "short",
+    "color-named": "never",
+    "comment-empty-line-before": "always",
+    "comment-whitespace-inside": "always",
+    "declaration-block-trailing-semicolon": "always",
+    "declaration-colon-space-after": "always",
+    "declaration-colon-space-before": "never",
+    "declaration-no-important": null,
+    "font-family-name-quotes": "always-where-recommended",
+    "font-family-no-missing-generic-family-keyword": [
+      true,
+      {
+        "ignoreFontFamilies": ["FontAwesome", "ForkAwesome"]
       }
-    }
-  ],
-  "reportInvalidScopeDisables": true,
-  "reportNeedlessDisables": true
+    ],
+    "font-weight-notation": "numeric",
+    "function-url-quotes": "always",
+    "indentation": 2,
+    "media-feature-colon-space-after": "always",
+    "media-feature-colon-space-before": "never",
+    "media-feature-parentheses-space-inside": "always",
+    "media-feature-range-operator-space-after": "always",
+    "media-feature-range-operator-space-before": "always",
+    "no-duplicate-selectors": true,
+    "number-leading-zero": "never",
+    "property-no-vendor-prefix": true,
+    "selector-attribute-brackets-space-inside": "never",
+    "selector-attribute-operator-space-after": "never",
+    "selector-attribute-operator-space-before": "never",
+    "selector-attribute-quotes": "always",
+    "selector-combinator-space-after": "always",
+    "selector-pseudo-element-colon-notation": "double",
+    "selector-pseudo-class-parentheses-space-inside": "never",
+    "selector-no-qualifying-type": [
+      true,
+      {
+        "ignore": ["attribute", "class", "id"]
+      }
+    ],
+    "selector-no-vendor-prefix": true,
+    "string-quotes": "double",
+    "value-no-vendor-prefix": true,
+    "scss/selector-no-union-class-name": true
+  }
 }
