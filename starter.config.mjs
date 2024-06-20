@@ -3,7 +3,7 @@ const publicPath = "public";
 const buildPath = "build";
 const thirdPartyPath = `${srcPath}/third-party`;
 
-module.exports = {
+const config = {
   archive: {
     input: `${publicPath}/**`,
     output: `${buildPath}/`,
@@ -51,3 +51,5 @@ module.exports = {
     watch: `${srcPath}/html/**/*.twig`,
   },
 };
+
+export default config;

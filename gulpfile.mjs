@@ -2,44 +2,51 @@
 // Gulp.js Configurations
 //
 
+"use strict";
+
 // Packages
-const { src, dest, series, parallel, watch } = require("gulp");
+import { src, dest, series, parallel, watch as gulpWatch } from "gulp";
 
 // Configuration
-const config = require("./starter.config");
+import config from "./starter.config.mjs";
 
 // Style related packages
-const sass = require("gulp-sass")(require("sass"));
-const postcss = require("gulp-postcss");
-const cleanCSS = require("gulp-clean-css");
-const autoprefixer = require("autoprefixer");
-const sourcemaps = require("gulp-sourcemaps");
+import dartSass from "sass";
+import gulpSass from "gulp-sass";
+const sass = gulpSass(dartSass);
+import postcss from "gulp-postcss";
+import cleanCSS from "gulp-clean-css";
+import autoprefixer from "autoprefixer";
+import sourcemaps from "gulp-sourcemaps";
 
 // JavaScript related packages
-const babel = require("gulp-babel");
-const terser = require("gulp-terser");
+import babel from "gulp-babel";
+import terser from "gulp-terser";
 
 // Template related packages
-const twig = require("gulp-twig");
-const data = require("gulp-data");
+import twig from "gulp-twig";
+import data from "gulp-data";
 
 // Image related packages
-const imagemin = require("gulp-imagemin");
-const spritesmith = require("gulp.spritesmith");
+import imagemin from "gulp-imagemin";
+import spritesmith from "gulp.spritesmith";
 
 // Server related packages
-const browserSync = require("browser-sync").create();
+import browserSync from "browser-sync";
+const bs = browserSync.create();
 
 // Utility packages
-const del = require("del");
-const fs = require("fs");
-const concat = require("gulp-concat");
-const gulpif = require("gulp-if");
-const header = require("gulp-header");
-const pkg = require("./package.json");
-const plumber = require("gulp-plumber");
-const rename = require("gulp-rename");
-const zip = require("gulp-zip");
+import { deleteAsync } from "del";
+import fs from "fs";
+import concat from "gulp-concat";
+import gulpif from "gulp-if";
+import header from "gulp-header";
+import plumber from "gulp-plumber";
+import rename from "gulp-rename";
+import zip from "gulp-zip";
+
+// Import JSON with assert
+import pkg from "./package.json" assert { type: "json" };
 
 // File Banner
 const banner = [
@@ -73,8 +80,8 @@ const archiveDist = (cb) => {
 };
 
 // Remove pre-existing content from output folders
-const cleanDist = (cb) => {
-  del.sync(config.clean);
+const cleanDist = async (cb) => {
+  await deleteAsync(config.clean);
   return cb();
 };
 
@@ -92,7 +99,7 @@ const buildImages = () => {
             removeViewBox: true,
           },
         ],
-      })
+      }),
     )
     .pipe(dest(config.images.output));
 };
@@ -105,21 +112,21 @@ const buildScripts = () => {
     .pipe(
       babel({
         presets: ["@babel/env"],
-      })
+      }),
     )
     .pipe(concat("scripts.js"))
-    .pipe(header(banner, { pkg: pkg }))
+    .pipe(header(banner, { pkg }))
     .pipe(dest(config.scripts.output))
     .pipe(
       terser({
         keep_fnames: true,
         mangle: false,
-      })
+      }),
     )
     .pipe(
       rename({
         suffix: ".min",
-      })
+      }),
     )
     .pipe(gulpif(process.env.NODE_ENV === "development", sourcemaps.write(".")))
     .pipe(dest(config.scripts.output));
@@ -127,8 +134,7 @@ const buildScripts = () => {
 
 // Convert a set of images into a spritesheet and CSS variables
 const buildSprites = (cb) => {
-  const spriteData = gulp
-    .src(config.sprites.input)
+  const spriteData = src(config.sprites.input)
     .pipe(plumber())
     .pipe(
       spritesmith({
@@ -141,7 +147,7 @@ const buildSprites = (cb) => {
         imgOpts: {
           quality: 100,
         },
-      })
+      }),
     );
 
   spriteData.img.pipe(dest(config.sprites.output));
@@ -158,10 +164,10 @@ const buildStyles = () => {
     .pipe(
       sass({
         outputStyle: "expanded",
-      })
+      }),
     )
     .pipe(postcss([autoprefixer()]))
-    .pipe(header(banner, { pkg: pkg }))
+    .pipe(header(banner, { pkg }))
     .pipe(dest(config.styles.output))
     .pipe(
       cleanCSS({
@@ -170,9 +176,9 @@ const buildStyles = () => {
             specialComments: 0,
           },
         },
-      })
+      }),
     )
-    .pipe(header(banner, { pkg: pkg }))
+    .pipe(header(banner, { pkg }))
     .pipe(rename({ suffix: ".min" }))
     .pipe(gulpif(process.env.NODE_ENV === "development", sourcemaps.write(".")))
     .pipe(dest(config.styles.output));
@@ -185,7 +191,7 @@ const buildTemplates = () => {
     .pipe(
       data((file) => {
         return JSON.parse(fs.readFileSync(config.content));
-      })
+      }),
     )
     .pipe(twig())
     .pipe(dest(config.templates.output));
@@ -203,7 +209,7 @@ const copyScripts = () => {
 
 // Watch for changes to the source directory
 const serveDist = (cb) => {
-  browserSync.init({
+  bs.init({
     server: {
       baseDir: config.server.root,
     },
@@ -215,39 +221,39 @@ const serveDist = (cb) => {
 
 // Reload the browser when files change
 const reloadBrowser = (cb) => {
-  browserSync.reload();
+  bs.reload();
   cb();
 };
 
 // Watch all file changes
 const watchSource = () => {
-  watch(config.images.watch, series(buildImages, reloadBrowser));
-  watch(config.scripts.watch, series(buildScripts, reloadBrowser));
-  watch(config.styles.watch, series(buildStyles, reloadBrowser));
-  watch([config.templates.watch, config.content], series(buildTemplates, reloadBrowser));
+  gulpWatch(config.images.watch, series(buildImages, reloadBrowser));
+  gulpWatch(config.scripts.watch, series(buildScripts, reloadBrowser));
+  gulpWatch(config.styles.watch, series(buildStyles, reloadBrowser));
+  gulpWatch([config.templates.watch, config.content], series(buildTemplates, reloadBrowser));
 };
 
 // Archive task
-exports.archive = archiveDist;
+export const archive = archiveDist;
 
 // Clean task
-exports.clean = cleanDist;
+export const clean = cleanDist;
 
 // Sprites task
-exports.sprites = buildSprites;
+export const sprites = buildSprites;
 
 // copy
-exports.copyStatic = parallel(copyFonts, copyScripts);
+export const copyStatic = parallel(copyFonts, copyScripts);
 
 // Build task
-exports.build = series(
+export const build = series(
   parallel(copyFonts, copyScripts),
   parallel(buildScripts, buildStyles, buildTemplates),
-  buildImages
+  buildImages,
 );
 
 // Watch Task
-exports.watch = watchSource;
+export const watch = watchSource;
 
 // Default task
-exports.default = series(exports.build, serveDist, watchSource);
+export default series(build, serveDist, watchSource);
