@@ -1,8 +1,22 @@
+## Node.js
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+pids
+logs
+results
+npm-debug.log
+node_modules
+
 ## OS X
 .DS_Store
 .AppleDouble
 .LSOverride
-Icon
 ._*
 .Spotlight-V100
 .Trashes
@@ -13,18 +27,7 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
-# ignore node dependency directories
-node_modules/
-
-# ignore log files and databases
-*.log
-*.sql
-*.sqlite
-
-# Editor configs
-.idea/
-
-# Project-specific
+## Project-specific
 build/
 public/
 *.map
