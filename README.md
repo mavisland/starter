@@ -1,126 +1,119 @@
-# boilerplate
+# Starter
 
-A boilerplate for building web projects with [Gulp.js](https://gulpjs.com/).
+This project automates and optimizes various development tasks using Gulp.js. The tasks include compiling SASS to CSS, transpiling and minifying JavaScript, optimizing images, generating spritesheets, compiling templates, and more.
 
-## Getting Started
+## Prerequisites
 
-### Features
+- Node.js (v18.x or later)
+- npm (v6.x or later) or yarn (v1.x or later)
 
-- Compile, minify, autoprefix SASS files.
-- Compile, concatenate and minify JavaScript.
-- Render Twig templates.
-- Optimise GIF, JPEG, PNG and SVG images.
-- Archive `dist` content.
-- Watch for file changes, and automatically recompile build.
-- Hot reloading with `browser-sync`.
+## Installation
 
-### Quick Start
+1.  Clone the repository:
 
+```sh
+git clone https://github.com/mavisland/starter.git
+cd starter
 ```
-# 1 Clone this repo
-git clone https://github.com/mavisland/boilerplate.git
 
-# 2 Navigate into the repo directory
-cd boilerplate
+2.  Install the dependencies:
 
-# 3 Install all node packages
+```sh
 npm install
-
-# 4 Get started
-npm run start
+# or
+yarn install
 ```
 
-### Requirements
+## Configuration
 
-This project requires you have [Node.js](https://nodejs.org/) with [npm](https://www.npmjs.com/get-npm) installed.
-This project requires you have a global installation of [gulp-cli](https://www.npmjs.com/package/gulp-cli).
+The configuration file `starter.config.mjs` holds paths and settings for different tasks. Ensure this file is correctly set up according to your project structure.
 
+## Available Gulp Tasks
+
+### `gulp archive`
+
+Archives pre-existing content from output folders into a ZIP file with a timestamp.
+
+### `gulp clean`
+
+Removes pre-existing content from the output folders.
+
+### `gulp sprites`
+
+Generates a spritesheet and corresponding SASS variables from a set of images.
+
+### `gulp copyStatic`
+
+Copies static files such as fonts and scripts to the output directory.
+
+### `gulp build`
+
+Performs a full build of the project, including:
+
+- Copying static files
+- Compiling and minifying scripts
+- Compiling, autoprefixing, and minifying styles
+- Compiling templates
+- Optimizing images
+
+### `gulp watch`
+
+Watches for changes in source files and automatically triggers the appropriate tasks.
+
+### `gulp`
+
+Runs the default task, which builds the project, starts a development server, and watches for changes.
+
+## Development Workflow
+
+1.  Start the development server and watch for changes:
+
+```sh
+gulp
 ```
-# Install gulp-cli globally
-npm install -g gulp-cli
-```
 
-## Documentation
+2.  The development server runs at `http://localhost:9050`. Any changes made to the source files will automatically trigger the relevant tasks and reload the browser.
 
-Add your source files to the appropriate `src` subdirectories. Gulp.js will process and and compile them into `dist`.
+## Task Details
 
 ### Styles
 
-Files in the `src/scss` directory will be compiled to `dist/css`.
+- Compiles SASS to CSS
+- Autoprefixes CSS for cross-browser compatibility
+- Minifies the CSS
 
 ### Scripts
 
-Put your JavaScript files in the `src/js` directory. Files placed directly in the `src/js` folder will compile directly to `dist/js` as both minified and unminified files.
+- Transpiles JavaScript using Babel
+- Concatenates and minifies JavaScript files
 
 ### Templates
 
-Put your `Twig` templates in the `src/html` directory. Files placed directly in the `src/html` folder will compile directly to `dist`.
+- Compiles Twig templates to HTML
+- Uses JSON data to populate templates
 
 ### Images
 
-Place GIF, JPEG, PNG and SVG images in the `src/images` directory. Images will be optimized with `imagemin` plugins and compiled into `dist/images`.
+- Optimizes GIF, JPEG, PNG, and SVG images
 
 ### Sprites
 
-Converts a series of images in the `src/sprites/image` folder to a sprite sheet and CSS styles.
+- Generates a spritesheet and corresponding SASS variables from a set of images
 
-## Options
+### Static Files
 
-### Tasks
+- Copies fonts and additional scripts to the output directory
 
-| Task Name | Task Decription                                 |
-| --------- | ----------------------------------------------- |
-| archive   | Archive `dist` content                          |
-| build     | Run all tasks                                   |
-| images    | Optimise GIF, JPEG, PNG and SVG images          |
-| serve     | Watch for changes to the `src` directory        |
-| scripts   | Concanate & minify JavaScript files             |
-| sprites   | Your images, icons, et al convert a spritesheet |
-| styles    | Compile, autoprefix & minify SASS files         |
-| templates | Render Twig templates                           |
-| watch     | Watch all file changes                          |
+## File Banner
 
-### Paths
+Each generated file includes a banner with the following information:
 
-Adjust the `input`, `output`, `watch` paths for all of the Gulp.js tasks under the `paths` variable. Paths are relative to the root project folder.
-
-```js
-// Paths
-const paths = {
-  archive: {
-    input: "dist/**",
-    output: "build/",
-  },
-  images: {
-    input: ["src/images/*.{gif,ico,jpg,png,svg}", "src/sprites/s.png"],
-    output: "dist/images",
-    watch: ["src/images/*.{gif,ico,jpg,png,svg}", "src/sprites/s.png"],
-  },
-  scripts: {
-    input: ["src/js/plugins.js", "src/js/main.js"],
-    output: "dist/js",
-    watch: "src/js/**/*.js",
-  },
-  server: {
-    root: "dist/",
-  },
-  sprites: {
-    input: "src/sprites/**/*.svg",
-    output: "dist/images",
-  },
-  styles: {
-    input: "src/scss/*.scss",
-    output: "dist/css",
-    watch: "src/scss/**/*.scss",
-  },
-  templates: {
-    input: "src/html/*.twig",
-    output: "dist/",
-    watch: "src/html/**/*.twig",
-  },
-};
-```
+- Project name
+- Project description
+- Version
+- Homepage
+- License
 
 ## License
 
-The code is available under the [MIT License](LICENSE.md).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
