@@ -58,7 +58,7 @@
     "gulp-twig": "^1.2.0",
     "gulp-zip": "^6.1.0",
     "gulp.spritesmith": "^6.13.1",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.4",
     "prettier": "^3.5.3",
     "sass": "^1.87.0",
     "stylelint": "^16.19.1",
