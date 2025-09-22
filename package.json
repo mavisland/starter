@@ -60,7 +60,7 @@
     "gulp.spritesmith": "^6.13.1",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
-    "sass": "^1.87.0",
+    "sass": "^1.93.0",
     "stylelint": "^16.19.1",
     "stylelint-config-twbs-bootstrap": "^16.0.0"
   }
