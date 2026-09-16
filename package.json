@@ -2,17 +2,23 @@
   "name": "starter",
   "version": "1.0.0",
   "description": "Gulp.js static site starter",
-  "main": "gulpfile.js",
+  "main": "gulpfile.mjs",
+  "packageManager": "npm@10.8.2",
+  "engines": {
+    "node": ">=20.19.0",
+    "npm": ">=10"
+  },
   "scripts": {
     "start": "cross-env NODE_ENV=development gulp",
     "clean": "gulp clean",
     "dev": "npm run clean && npm run start",
     "build": "cross-env NODE_ENV=production gulp build",
+    "check": "node --check gulpfile.mjs && node --check starter.config.mjs && node --check src/js/scripts.js && node --check .babelrc.js",
     "sprites": "gulp sprites",
     "archive": "npm run clean && npm run build && gulp archive",
     "preversion": "npm run clean",
     "version": "npm run build",
-    "postversion": "gulp archive && git push && git push --tags"
+    "postversion": "gulp archive"
   },
   "repository": {
     "type": "git",
@@ -34,18 +40,25 @@
     "url": "https://github.com/mavisland/starter/issues"
   },
   "homepage": "https://github.com/mavisland/starter",
+  "overrides": {
+    "lodash@<4.18.1": "4.18.1",
+    "follow-redirects@<1.16.0": "1.16.0",
+    "request": {
+      "form-data": "2.5.6"
+    },
+    "handlebars@>=4 <4.7.9": "4.7.9"
+  },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.0",
-    "autoprefixer": "^10.4.27",
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "autoprefixer": "^10.5.0",
     "browser-sync": "^3.0.4",
     "cross-env": "^10.1.0",
     "del": "^8.0.1",
     "gulp": "^5.0.1",
-    "gulp-babel": "^8.0.0",
+    "gulp-babel": "^8.1.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
-    "gulp-data": "^1.3.1",
     "gulp-header": "^2.0.12",
     "gulp-if": "^3.0.0",
     "gulp-imagemin": "^9.2.0",
@@ -55,11 +68,11 @@
     "gulp-sass": "^6.0.1",
     "gulp-sourcemaps": "^3.0.0",
     "gulp-terser": "^2.1.0",
-    "gulp-twig": "^1.2.0",
     "gulp-zip": "^6.1.0",
     "gulp.spritesmith": "^6.13.1",
-    "postcss": "^8.5.8",
-    "prettier": "^3.8.1",
-    "sass": "^1.97.3"
+    "postcss": "^8.5.28",
+    "prettier": "^3.8.4",
+    "sass": "^1.101.0",
+    "twig": "^1.17.1"
   }
 }

@@ -12,8 +12,8 @@
       });
     },
     initTooltip: function (elm) {
-      $(elm).tooltip({
-        trigger: "hover",
+      $(elm).each(function () {
+        bootstrap.Tooltip.getOrCreateInstance(this, { trigger: "hover" });
       });
     },
     initBootNavbar: function () {
@@ -35,10 +35,12 @@
     init: function () {
       this.setBackgroundColor("[data-bg-color]");
       this.setBackgroundImage("[data-bg-image]");
-      this.initTooltip('[data-toggle="tooltip"]');
+      this.initTooltip('[data-bs-toggle="tooltip"], [data-toggle="tooltip"]');
       this.initBootNavbar();
       this.dropdownAttr();
     },
   };
-  starter.init();
+  $(function () {
+    starter.init();
+  });
 })();

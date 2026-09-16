@@ -4,8 +4,8 @@ This project automates and optimizes various development tasks using Gulp.js. Th
 
 ## Prerequisites
 
-- Node.js (v18.x or later)
-- npm (v6.x or later) or yarn (v1.x or later)
+- Node.js v20.19.0 or later
+- npm v10 or later (the primary package manager)
 
 ## Installation
 
@@ -19,10 +19,10 @@ cd starter
 2.  Install the dependencies:
 
 ```sh
-npm install
-# or
-yarn install
+npm ci
 ```
+
+`npm ci` installs the exact versions in `package-lock.json`. Use `npm install` when adding or updating dependencies and commit the updated lockfile. Security overrides are defined in `package.json`.
 
 ## Configuration
 
@@ -69,10 +69,12 @@ Runs the default task, which builds the project, starts a development server, an
 1.  Start the development server and watch for changes:
 
 ```sh
-gulp
+npm run start
 ```
 
 2.  The development server runs at `http://localhost:9050`. Any changes made to the source files will automatically trigger the relevant tasks and reload the browser.
+
+Use `npm run dev` to clean the output before starting. If native filesystem events are unavailable, run `CHOKIDAR_USEPOLLING=true npm start`.
 
 ## Task Details
 
@@ -106,13 +108,27 @@ gulp
 
 ## File Banner
 
-Each generated file includes a banner with the following information:
+Generated CSS and JavaScript bundles include a banner with the following information:
 
 - Project name
 - Project description
 - Version
 - Homepage
 - License
+
+## Validation
+
+```sh
+npm run check
+npm run build
+npm run archive
+```
+
+`npm run check` checks JavaScript and configuration syntax. There is currently no automated test suite. Production compilation errors fail the build command; development tasks keep watching for corrections.
+
+GitHub Actions installs dependencies with `npm ci`, checks syntax, builds the project, checks generated files and binary font copying, and validates the ZIP archive on Node.js 20, 22, and 24. It runs on pushes, pull requests, and manual dispatch.
+
+`npm version` cleans, builds, and archives the project. Push commits and tags separately when ready.
 
 ## License
 

@@ -11,7 +11,7 @@ import { src, dest, series, parallel, watch as gulpWatch } from "gulp";
 import config from "./starter.config.mjs";
 
 // Style related packages
-import dartSass from "sass";
+import * as dartSass from "sass";
 import gulpSass from "gulp-sass";
 const sass = gulpSass(dartSass);
 import postcss from "gulp-postcss";
@@ -24,11 +24,10 @@ import babel from "gulp-babel";
 import terser from "gulp-terser";
 
 // Template related packages
-import twig from "gulp-twig";
-import data from "gulp-data";
+import twig from "twig";
 
 // Image related packages
-import imagemin from "gulp-imagemin";
+import imagemin, { gifsicle, mozjpeg, optipng, svgo } from "gulp-imagemin";
 import spritesmith from "gulp.spritesmith";
 
 // Server related packages
@@ -38,6 +37,8 @@ const bs = browserSync.create();
 // Utility packages
 import { deleteAsync } from "del";
 import fs from "fs";
+import { Transform } from "node:stream";
+import { pipeline } from "node:stream/promises";
 import concat from "gulp-concat";
 import gulpif from "gulp-if";
 import header from "gulp-header";
@@ -45,8 +46,21 @@ import plumber from "gulp-plumber";
 import rename from "gulp-rename";
 import zip from "gulp-zip";
 
-// Import JSON with assert
-import pkg from "./package.json" assert { type: "json" };
+import pkg from "./package.json" with { type: "json" };
+
+const isDevelopment = () => process.env.NODE_ENV === "development";
+
+// Keep watch tasks alive, but let production builds report compilation failures.
+const runPipeline = (input, ...transforms) => {
+  if (!isDevelopment()) return pipeline(input, ...transforms);
+  const stream = input.pipe(
+    plumber(function (error) {
+      console.error(error.toString());
+      this.emit("end");
+    }),
+  );
+  return transforms.reduce((output, transform) => output.pipe(transform), stream);
+};
 
 // File Banner
 const banner = [
@@ -72,134 +86,113 @@ const getTimestamp = () => {
 };
 
 // Archive pre-existing content from output folders
-const archiveDist = (cb) => {
-  src(config.archive.input)
-    .pipe(zip(pkg.name + "_v" + pkg.version + "-build_" + getTimestamp() + ".zip"))
-    .pipe(dest(config.archive.output));
-  return cb();
+const archiveDist = () => {
+  return pipeline(
+    src(config.archive.input, { encoding: false }),
+    zip(pkg.name + "_v" + pkg.version + "-build_" + getTimestamp() + ".zip"),
+    dest(config.archive.output),
+  );
 };
 
 // Remove pre-existing content from output folders
-const cleanDist = async (cb) => {
+const cleanDist = async () => {
   await deleteAsync(config.clean);
-  return cb();
 };
 
 // Optimise GIF, JPEG, PNG and SVG images
 const buildImages = () => {
-  return src(config.images.input)
-    .pipe(plumber())
-    .pipe(
-      imagemin({
-        interlaced: true,
-        progressive: true,
-        optimizationLevel: 5,
-        svgoPlugins: [
-          {
-            removeViewBox: true,
-          },
-        ],
-      }),
-    )
-    .pipe(dest(config.images.output));
+  return runPipeline(
+    src(config.images.input, { encoding: false }),
+    imagemin([
+      gifsicle({ interlaced: true }),
+      mozjpeg({ progressive: true }),
+      optipng({ optimizationLevel: 5 }),
+      svgo(),
+    ]),
+    dest(config.images.output),
+  );
 };
 
 // Concanate & minify JavaScript files
 const buildScripts = () => {
-  return src(config.scripts.input)
-    .pipe(plumber())
-    .pipe(gulpif(process.env.NODE_ENV === "development", sourcemaps.init()))
-    .pipe(
-      babel({
-        presets: ["@babel/env"],
-      }),
-    )
-    .pipe(concat("scripts.js"))
-    .pipe(header(banner, { pkg }))
-    .pipe(dest(config.scripts.output))
-    .pipe(
-      terser({
-        keep_fnames: true,
-        mangle: false,
-      }),
-    )
-    .pipe(
-      rename({
-        suffix: ".min",
-      }),
-    )
-    .pipe(gulpif(process.env.NODE_ENV === "development", sourcemaps.write(".")))
-    .pipe(dest(config.scripts.output));
+  return runPipeline(
+    src(config.scripts.input),
+    gulpif(isDevelopment(), sourcemaps.init()),
+    babel({ presets: ["@babel/env"] }),
+    concat("scripts.js"),
+    header(banner, { pkg }),
+    dest(config.scripts.output),
+    terser({ keep_fnames: true, mangle: false }),
+    rename({ suffix: ".min" }),
+    gulpif(isDevelopment(), sourcemaps.write(".")),
+    dest(config.scripts.output),
+  );
 };
 
 // Convert a set of images into a spritesheet and CSS variables
-const buildSprites = (cb) => {
-  const spriteData = src(config.sprites.input)
-    .pipe(plumber())
-    .pipe(
-      spritesmith({
-        imgName: "s.png",
-        cssName: "_sprites.scss",
-        cssFormat: "scss",
-        cssTemplate: "src/sprites/scss.template.handlebars",
-        imgPath: "../images/s.png",
-        padding: 3,
-        imgOpts: {
-          quality: 100,
-        },
-      }),
-    );
-
-  spriteData.img.pipe(dest(config.sprites.output));
-  spriteData.css.pipe(dest(config.sprites.output));
-
-  return cb();
+const buildSprites = () => {
+  return pipeline(
+    src(config.sprites.input, { encoding: false }),
+    spritesmith({
+      imgName: "s.png",
+      cssName: "_sprites.scss",
+      cssFormat: "scss",
+      cssTemplate: "src/sprites/scss.template.handlebars",
+      imgPath: "../images/s.png",
+      padding: 3,
+      imgOpts: { quality: 100 },
+    }),
+    dest(config.sprites.output),
+  );
 };
 
 // Compile, autoprefix & minify SASS files
 const buildStyles = () => {
-  return src(config.styles.input)
-    .pipe(plumber())
-    .pipe(gulpif(process.env.NODE_ENV === "development", sourcemaps.init()))
-    .pipe(
-      sass({
-        outputStyle: "expanded",
-      }),
-    )
-    .pipe(postcss([autoprefixer()]))
-    .pipe(header(banner, { pkg }))
-    .pipe(dest(config.styles.output))
-    .pipe(
-      cleanCSS({
-        level: {
-          1: {
-            specialComments: 0,
-          },
-        },
-      }),
-    )
-    .pipe(header(banner, { pkg }))
-    .pipe(rename({ suffix: ".min" }))
-    .pipe(gulpif(process.env.NODE_ENV === "development", sourcemaps.write(".")))
-    .pipe(dest(config.styles.output));
+  return runPipeline(
+    src(config.styles.input),
+    gulpif(isDevelopment(), sourcemaps.init()),
+    sass({ outputStyle: "expanded" }),
+    postcss([autoprefixer()]),
+    header(banner, { pkg }),
+    dest(config.styles.output),
+    cleanCSS({ level: { 1: { specialComments: 0 } } }),
+    header(banner, { pkg }),
+    rename({ suffix: ".min" }),
+    gulpif(isDevelopment(), sourcemaps.write(".")),
+    dest(config.styles.output),
+  );
 };
 
 // Compile Twig files to HTML
 const buildTemplates = () => {
-  return src(config.templates.input)
-    .pipe(plumber())
-    .pipe(
-      data((file) => {
-        return JSON.parse(fs.readFileSync(config.content));
-      }),
-    )
-    .pipe(twig())
-    .pipe(dest(config.templates.output));
+  twig.cache(false);
+  return runPipeline(
+    src(config.templates.input),
+    new Transform({
+      objectMode: true,
+      transform(file, encoding, callback) {
+        try {
+          const content = JSON.parse(fs.readFileSync(config.content, "utf8"));
+          const target = {
+            path: file.path.replace(/\.twig$/, ".html"),
+            relative: file.relative.replace(/\.twig$/, ".html"),
+          };
+          const template = twig.twig({ path: file.path, async: false, rethrow: true });
+          file.contents = Buffer.from(template.render({ ...content, _file: file, _target: target }));
+          file.path = target.path;
+          callback(null, file);
+        } catch (error) {
+          callback(new Error(`${file.relative}: ${error.message || error}`, { cause: error }));
+        }
+      },
+    }),
+    dest(config.templates.output),
+  );
 };
 
 // 'copy:fonts'
 const copyFonts = () => {
-  return src(config.fonts.input).pipe(dest(config.fonts.output));
+  return src(config.fonts.input, { encoding: false }).pipe(dest(config.fonts.output));
 };
 
 // 'copy:scripts'
@@ -226,11 +219,20 @@ const reloadBrowser = (cb) => {
 };
 
 // Watch all file changes
-const watchSource = () => {
-  gulpWatch(config.images.watch, series(buildImages, reloadBrowser));
-  gulpWatch(config.scripts.watch, series(buildScripts, reloadBrowser));
-  gulpWatch(config.styles.watch, series(buildStyles, reloadBrowser));
-  gulpWatch([config.templates.watch, config.content], series(buildTemplates, reloadBrowser));
+const watchSource = async () => {
+  // Set polling before Chokidar chooses the native macOS event backend.
+  const options = process.env.CHOKIDAR_USEPOLLING
+    ? { usePolling: !/^(false|0)$/i.test(process.env.CHOKIDAR_USEPOLLING) }
+    : {};
+  const watchers = [
+    gulpWatch(config.images.watch, options, series(buildImages, reloadBrowser)),
+    gulpWatch(config.scripts.watch, options, series(buildScripts, reloadBrowser)),
+    gulpWatch(config.styles.watch, options, series(buildStyles, reloadBrowser)),
+    gulpWatch([config.templates.watch, config.content], options, series(buildTemplates, reloadBrowser)),
+  ];
+  await Promise.all(
+    watchers.map((watcher) => new Promise((resolve, reject) => watcher.once("ready", resolve).once("error", reject))),
+  );
 };
 
 // Archive task
